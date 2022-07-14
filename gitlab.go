@@ -286,9 +286,6 @@ func newClient(options ...ClientOptionFunc) (*Client, error) {
 		RetryMax:     5,
 	}
 
-	// Set the default base URL.
-	c.setBaseURL(defaultBaseURL)
-
 	// Apply any given client options.
 	for _, fn := range options {
 		if fn == nil {
@@ -517,7 +514,10 @@ func (c *Client) BaseURL() *url.URL {
 }
 
 // setBaseURL sets the base URL for API requests to a custom endpoint.
-func (c *Client) setBaseURL(urlStr string) error {
+func (c *Client) SetBaseURL(urlStr string) error {
+	if len(urlStr) == 0 {
+		urlStr = defaultBaseURL
+	}
 	// Make sure the given URL end with a slash
 	if !strings.HasSuffix(urlStr, "/") {
 		urlStr += "/"
